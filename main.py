@@ -66,4 +66,4 @@ templates = Jinja2Templates(directory="templates") # We created a template objec
 @app.get("/", include_in_schema=False, name="home")
 @app.get("/posts", include_in_schema=False, name="posts")
 def home(request: Request): # We will be adding a request parameter as a argument here because it is required by jinja2 (template engine)
-    return templates.TemplateResponse(request, "home.html", {"posts": posts, "title": "Home"}, ) # The 3rd argument here is referred as a context dictionary adn this dictionary contains all the variables that we wanna be able to use in our template. The first variable we passed in is 
+    return templates.TemplateResponse(request, "home.html", {"posts": posts, "title": "Home"}, ) # The 3rd argument here is referred as a context dictionary and this dictionary contains all the variables that we wanna be able to use in our template.
