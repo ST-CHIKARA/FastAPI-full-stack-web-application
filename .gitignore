@@ -11,6 +11,9 @@ __pycache__/
 *$py.class
 *.so
 .codex
+.codex/
+.agents
+.agents/
 *:Zone.Identifier
 .Python
 build/
