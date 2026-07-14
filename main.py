@@ -36,9 +36,11 @@ posts: list[dict] = [
 
 
 
-@app.get("/api/posts")
-def get_posts():
-    return posts
+# This endpoint was modified due to certain changes that i learned in video - 4 adn this endpoint was copied and pasted on line 190 with further modifications
+
+# @app.get("/api/posts")
+# def get_posts():
+#     return posts
 
 
 from fastapi.responses import HTMLResponse
@@ -91,14 +93,16 @@ from starlette.exceptions import HTTPException as starlettehttpexception # becau
 
 # for the api route
 
-@app.get("/api/posts/{post_id}") # post_id is what we are going to be capturing as a path parameter
-def get_post(post_id: int): # here this type hint is important because fastapi uses it to validate the input
-    for post in posts:
-        if post.get("id") == post_id: # comparing the id of each dictionary with the path variable 
-            return post
+# this api route was modified in video - 4, thats why this was commented out 
+
+# @app.get("/api/posts/{post_id}") # post_id is what we are going to be capturing as a path parameter
+# def get_post(post_id: int): # here this type hint is important because fastapi uses it to validate the input
+    # for post in posts:
+        # if post.get("id") == post_id: # comparing the id of each dictionary with the path variable 
+            # return post
     #return {"error": "Post not found"} # here this is a basic way to handle the error will move forward on this topic later
 
-    raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Post not found") # after this the dev server will show the 404 status code 
+    # raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Post not found") # after this the dev server will show the 404 status code 
 
 # When we try to access a post that is not present as in case if i do localhost:8000/api/posts/5 the browser will show our error message but the server running in the terminal shows a 200 success status code which should be a 404 as the post was not find and to do that we have to raise a http exception with a proper 404 status code and this is a good restful api best practice. 
 
@@ -167,3 +171,57 @@ def validation_exception_handler(request: Request, exception: RequestValidationE
         },
         status_code=status.HTTP_422_UNPROCESSABLE_CONTENT,
     )
+
+
+
+# Video - 4
+
+# Pydantic & Create schemas with request and response models
+# Add field validation fo things like minimum and maximum length
+# Update our get endpoint to use those response models 
+# Create new post endpoint to add new post
+# Testing in interactive docs
+
+
+# What is Pydantic ?
+# Its a data validation library that uses python type hints, it enforces them at runtime and give me detailed error responses. 
+
+# We are covering this before adding the database because fastapi's biggest strength is how it integrates with pydantic. Schemas to find what data we accept from the clients and what data we returns and the database schemas defines what we store so we are keeping a separation of concerns here.
+
+from schemas import PostCreate, PostResponse 
+
+@app.get("/api/posts", response_model=list[PostResponse])
+def get_posts():
+    return posts
+
+
+# Create post endpoint
+
+@app.post(
+    "/api/posts",
+    response_model=PostResponse,
+    status_code=status.HTTP_201_CREATED,
+)
+def create_post(post: PostCreate):
+    new_id = max(p["id"] for p in posts) + 1 if posts else 1
+    new_post = {
+        "id": new_id,
+        "author": post.author,
+        "title": post.title,
+        "content": post.content,
+        "date_posted": "April 23, 2025",
+    }
+    posts.append(new_post)
+    return new_post
+
+
+@app.get("/api/posts/{post_id}", response_model=PostResponse) # here we are returning just a single post not a list of posts so we expect a post response from a single post at this get endpoint
+def get_post(post_id: int): # here this type hint is important because fastapi uses it to validate the input
+    for post in posts:
+        if post.get("id") == post_id: # comparing the id of each dictionary with the path variable 
+            return post
+
+    raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Post not found") # after this the dev server will show the 404 status code 
+
+
+# when we create a new post we get to see it on the homepage but as soon as we restart our server the post cant be seen again because we are storing the new post or posts currently in a list in temporary python memory. This problem will be solved in the next video that covers integrating a database in our project 
