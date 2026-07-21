@@ -22,3 +22,8 @@ I am following this yt playlist [FastAPI playlist by Corey Schafer](https://www.
 - Video - 4:
     - [Schemas for posts API](https://github.com/ST-CHIKARA/FastAPI-full-stack-web-application/commit/c5241314af962dfb51eab2778a2efa40fca6302a)
     - [Connected schemas + Understood about Request & Response Validations](https://github.com/ST-CHIKARA/FastAPI-full-stack-web-application/commit/ddeef23bc937175abc8d686c291b39a98acc6873)
+
+- Video - 5:
+    - [Adding a database](https://github.com/ST-CHIKARA/FastAPI-full-stack-web-application/commit/dcdb9e49484dffd4e6271a7e1bd57eb8db851eb7)
+    - [Adding sqlalchemy models](https://github.com/ST-CHIKARA/FastAPI-full-stack-web-application/commit/0fb9291270d38312a259d1b3d889030a8bfaa768)
+    
